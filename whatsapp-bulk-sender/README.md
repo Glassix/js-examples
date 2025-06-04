@@ -1,4 +1,4 @@
-# 📤 WhatsApp Bulk Sender
+# WhatsApp Bulk Sender
 
 A browser-based tool for sending personalized WhatsApp messages in bulk using the [Glassix API](https://docs.glassix.com), styled with Material Design via [Material Components Web (MDC)](https://github.com/material-components/material-components-web).
 
