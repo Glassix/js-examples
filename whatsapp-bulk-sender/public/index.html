@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Glassix WhatsApp Sender</title>
+  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <style>
+    body {
+      font-family: Roboto, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem;
+      background: #fafafa;
+    }
+    .mdc-text-field {
+      margin: 1rem 0;
+      width: 100%;
+    }
+    .mdc-button {
+      margin-top: 1rem;
+    }
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-around;
+    }
+    .csv-upload-container {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: left;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .csv-upload-container button {
+      margin: 0;
+    }
+    #progressBar {
+      width: 100%;
+      margin-top: 2rem;
+      height: 4px;
+      background: #e0e0e0;
+    }
+    #progressBar > div {
+      height: 100%;
+      background: #6200ee;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    #statusLog {
+      font-family: monospace;
+      margin-top: 2rem;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <h2 class="mdc-typography--headline5">Glassix WhatsApp Sender</h2>
+
+  <label class="mdc-text-field mdc-text-field--outlined">
+    <input type="text" class="mdc-text-field__input" id="apiKey" placeholder="Glassix API Access Token">
+    <span class="mdc-notched-outline"><span class="mdc-notched-outline__leading"></span><span class="mdc-notched-outline__notch"><label class="mdc-floating-label">API Access Token</label></span><span class="mdc-notched-outline__trailing"></span></span>
+  </label>
+
+  <label class="mdc-text-field mdc-text-field--outlined">
+    <input type="text" class="mdc-text-field__input" id="subdomain" placeholder="yourcompany">
+    <span class="mdc-notched-outline"><span class="mdc-notched-outline__leading"></span><span class="mdc-notched-outline__notch"><label class="mdc-floating-label">Glassix Workspace</label></span><span class="mdc-notched-outline__trailing"></span></span>
+  </label>
+
+  <label class="mdc-text-field mdc-text-field--outlined">
+    <input type="text" class="mdc-text-field__input" id="fromNumber" placeholder="12065551234">
+    <span class="mdc-notched-outline"><span class="mdc-notched-outline__leading"></span><span class="mdc-notched-outline__notch"><label class="mdc-floating-label">Sender Number</label></span><span class="mdc-notched-outline__trailing"></span></span>
+  </label>
+
+  <label class="mdc-text-field mdc-text-field--textarea mdc-text-field--outlined">
+    <textarea class="mdc-text-field__input" rows="6" id="messageText" placeholder="Your template..."></textarea>
+    <span class="mdc-notched-outline"><span class="mdc-notched-outline__leading"></span><span class="mdc-notched-outline__notch"><label class="mdc-floating-label">WhatsApp Template Text</label></span><span class="mdc-notched-outline__trailing"></span></span>
+  </label>
+
+  <label class="mdc-text-field mdc-text-field--outlined">
+    <input type="text" class="mdc-text-field__input" id="fileUrls" placeholder="https://example.com/file.jpg">
+    <span class="mdc-notched-outline"><span class="mdc-notched-outline__leading"></span><span class="mdc-notched-outline__notch"><label class="mdc-floating-label">File URLs</label></span><span class="mdc-notched-outline__trailing"></span></span>
+  </label>
+
+  <div class="csv-upload-container">
+    <input type="file" id="csvInput" accept=".csv" style="display: none;" />
+    <button class="mdc-button mdc-button--outlined" onclick="document.getElementById('csvInput').click()">
+      <span class="mdc-button__label">Choose CSV File</span>
+    </button>
+    <span id="fileNameDisplay" style="margin-left: 1rem;">No file selected</span>
+  </div>
+
+  <div class="button-container">
+    <button class="mdc-button" onclick="downloadCSVTemplate()">
+      <span class="mdc-button__label">Download Template</span>
+    </button>
+    <button class="mdc-button mdc-button--raised" onclick="processCSV()">
+      <span class="mdc-button__label">Send Messages</span>
+    </button>
+  </div>
+
+  <div id="progressBar"><div></div></div>
+
+  <div id="statusLog"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <script>
+    const MAX_MESSAGES_PER_MINUTE = 500;
+    const DELAY_MS = 60000 / MAX_MESSAGES_PER_MINUTE;
+
+    document.getElementById('csvInput').addEventListener('change', function () {
+      const fileDisplay = document.getElementById('fileNameDisplay');
+      const file = this.files[0];
+      fileDisplay.textContent = file ? file.name : 'No file selected';
+    });
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function downloadCSVTemplate() {
+      const csvContent = "to\n12065551234\n44581112222";
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "glassix-template.csv");
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function processCSV() {
+      const subdomain = document.getElementById('subdomain').value.trim();
+      const apiKey = document.getElementById('apiKey').value.trim();
+      const fromNumber = document.getElementById('fromNumber').value.trim();
+      const messageText = document.getElementById('messageText').value.trim();
+      const fileUrlsInput = document.getElementById('fileUrls').value.trim();
+      const fileInput = document.getElementById('csvInput');
+
+      if (!apiKey || !fromNumber || !messageText || !fileInput.files.length) {
+        alert("Please fill in all fields and upload a CSV file.");
+        return;
+      }
+
+      const fileUrls = fileUrlsInput
+        ? fileUrlsInput.split(',').map(url => url.trim()).filter(Boolean)
+        : [];
+
+      Papa.parse(fileInput.files[0], {
+        header: true,
+        skipEmptyLines: true,
+        complete: async function(results) {
+          const rows = results.data;
+          const progressBar = document.getElementById('progressBar');
+          let successCount = 0;
+          let failCount = 0;
+          for (let i = 0; i < rows.length; i++) {
+            const toNumber = rows[i].to?.trim();
+            let success = false;
+            if (toNumber) {
+              success = await sendMessage(apiKey, subdomain, fromNumber, toNumber, messageText, fileUrls);
+              const logEntry = document.createElement("div");
+              logEntry.textContent = success
+                ? `${toNumber} sent successfully`
+                : `${toNumber} failed`;
+              statusLog.prepend(logEntry);
+              success ? successCount++ : failCount++;
+              await sleep(DELAY_MS);
+            }
+            progressBar.value = ((i + 1) / rows.length) * 100;
+          }
+          alert(`${successCount} messages sent successfully.\n${failCount} failed.`);
+        }
+      });
+    }
+
+    async function sendMessage(apiKey, subdomain, from, to, text, files) {
+      const payload = {
+        protocolType: "WhatsApp",
+        from,
+        to,
+        text,
+        files
+      };
+
+      try {
+        const response = await fetch("/.netlify/functions/proxySend", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            apiKey,
+            subdomain,
+            payload
+          })
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+          console.error(`Failed to send to ${to}:`, result);
+          throw new Error(`Failed for ${to}: ${result.error || response.statusText}`);
+        }
+
+        console.log(`Sent to ${to}:`, result);
+        return true;
+
+      } catch (error) {
+        console.error(`Error sending to ${to}:`, error.message);
+        return false;
+      }
+  }
+
+    // Initialize MDC text fields
+  document.querySelectorAll('.mdc-text-field').forEach(el => {
+    mdc.textField.MDCTextField.attachTo(el);
+  });
+  </script>
+</body>
+</html>
