@@ -3,7 +3,7 @@
 A browser-based tool for sending personalized WhatsApp messages in bulk using the [Glassix API](https://docs.glassix.com), styled with Material Design via [Material Components Web (MDC)](https://github.com/material-components/material-components-web).
 
 Deployed on [Netlify](https://www.netlify.com/) with a serverless function that securely proxies requests.
-
+  
 
 
 ## Functions
@@ -19,7 +19,7 @@ Deployed on [Netlify](https://www.netlify.com/) with a serverless function that 
 - Success/failure logging
 - Rate limited to 500 messages per minute
 - Secure Netlify function to proxy requests with your API key
-
+  
 
 
 ## Folder Structure
@@ -34,7 +34,7 @@ whatsapp-bulk-sender/
 ├── package.json             # For node-fetch (if needed)
 └── README.md
 ```
-
+  
 
 
 ## Getting Started
@@ -54,7 +54,7 @@ Required for Netlify CLI and Glassix NPM support:
 ```bash
 npm install
 ```
-
+  
 
 ## Install Netlify CLI
 
@@ -78,7 +78,7 @@ Make sure your `netlify.toml` is set to:
 functions = "functions"
 publish = "public"
 ```
-
+  
 
 
 ## Usage Instructions
@@ -93,7 +93,7 @@ publish = "public"
 3. Download the provided template or create a CSV file with a `to` column and recipient numbers in the following format: 12065551234
 4. Upload your CSV containing recipient phone numbers
 5. Click **Send Messages**
-
+  
 
 
 ## Technologies Used
@@ -102,7 +102,7 @@ publish = "public"
 - [PapaParse](https://www.papaparse.com/) for CSV parsing
 - [Material Components Web](https://github.com/material-components/material-components-web)
 - Netlify Functions (`proxySend.js`)
-
+  
 
 
 ## Security & Privacy
@@ -114,7 +114,7 @@ Included safeguards:
 - All Glassix API calls go through a Netlify proxy function
 
 **Always** get consent from recipients before sending them marketing material.
-
+  
 
 
 ## Coming Improvements
@@ -122,7 +122,7 @@ Included safeguards:
 - WebSocket or polling to reflect message delivery statuses
 - Retry mechanism for failed sends
 - CSV import with custom fields for message templating
-
+  
 
 
 ## License
