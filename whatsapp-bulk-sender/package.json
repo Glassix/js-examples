@@ -1,5 +1,5 @@
 {
-  "name": "glassix-whatsapp-sender",
+  "name": "whatsapp-bulk-sender",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
