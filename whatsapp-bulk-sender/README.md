@@ -5,6 +5,11 @@ A browser-based tool for sending personalized WhatsApp messages in bulk using th
 Deployed on [Netlify](https://www.netlify.com/) with a serverless function that securely proxies requests.
 <br>
 <br>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d4b0e905-c6f1-4c21-8177-d3933ed9b4eb">
+</p>
+<br>
+<br>
 
 ## Functions
 
