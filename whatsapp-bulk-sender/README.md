@@ -20,7 +20,6 @@ Deployed on [Netlify](https://www.netlify.com/) with a serverless function that 
 - Rate limited to 500 messages per minute
 - Secure Netlify function to proxy requests with your API key
 <br>
-<br>
 
 ## Folder Structure
 
@@ -95,7 +94,6 @@ publish = "public"
 4. Upload your CSV containing recipient phone numbers
 5. Click **Send Messages**
 <br>
-<br>
 
 ## Technologies Used
 
@@ -103,7 +101,6 @@ publish = "public"
 - [PapaParse](https://www.papaparse.com/) for CSV parsing
 - [Material Components Web](https://github.com/material-components/material-components-web)
 - Netlify Functions (`proxySend.js`)
-<br>
 <br>
 
 ## Security & Privacy
@@ -123,7 +120,6 @@ Included safeguards:
 - WebSocket or polling to reflect message delivery statuses
 - Retry mechanism for failed sends
 - CSV import with custom fields for message templating
-<br>
 <br>
 
 ## License
