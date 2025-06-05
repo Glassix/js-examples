@@ -1,8 +1,22 @@
 # WhatsApp Bulk Sender
 
-A browser-based tool for sending personalized WhatsApp messages in bulk using the [Glassix API](https://docs.glassix.com), styled with Material Design via [Material Components Web (MDC)](https://github.com/material-components/material-components-web).
+This tool provides a user-friendly, browser-based interface for sending WhatsApp messages in bulk using the Protocol Send method of the [Glassix NPM](https://github.com/Glassix/glassix-js) package. Because the tool sends non-ticket WhatsApp messages, you should familiarize yourself with [non-ticket message sending](https://docs.glassix.com/docs/send-a-non-ticket-message#/) before continuing, if you haven't already.
 
-Deployed on [Netlify](https://www.netlify.com/) with a serverless function that securely proxies requests.
+As this is a simply a browser-based interface for non-ticket message sending, the same [requirements](https://docs.glassix.com/docs/send-a-non-ticket-message#prerequisites) apply as when sending with the Glassix NPM package or directly through the API.
+
+> [!IMPORTANT]
+> While the provided sample tool is completely functional, please keep in mind that it is intended as an example only, and should be considered a kicking-off point or template for your own project, rather than as a complete solution. This sample does not, for example, collect or track message delivery statuses, something we would recommend be added into any production solution.
+
+To use this tool, you must have:
+- A way to make API calls and a basic understanding of the API.
+- An [API access token](https://docs.glassix.com/reference/access-token) to provide in the request header.
+- An active channel identifier (either a phone number or Apple Business ID) to send messages from.
+- A channel with active non-ticket message sending.
+
+In addition, the provided sample must be deployed to a web server. You will need:
+- An existing web server or a basic understanding of how to spin up a server
+- A basic understanding of how to work with and deploy server-side code
+
 <br>
 <br>
 <p align="center">
@@ -11,33 +25,19 @@ Deployed on [Netlify](https://www.netlify.com/) with a serverless function that 
 <br>
 <br>
 
-## Functions
+## Functionality
 
+The sample tool in this example includes the following functionality:
 - Send WhatsApp messages to large numbers of recipients at one time from your Glassix number
 - Track sending status with a real-time progress bar
 - Track successful and failed API calls with a built-in log
+- Configure and apply a rate limit (default: 500 messages per minute)
 
-## Features
+Before deploying this tool for any type of regular use, we would recommend adding in at least the following:
+- WebSockets or polling to collect, display and log [message delivery statuses](https://docs.glassix.com/docs/send-a-non-ticket-message#getting-message-status-responses)
+- A retry mechanism for failed sends, based on message delivery statuses
 
-- Styled with Google's Material Components Web (CSS + JS)
-- Real-time progress bar
-- Success/failure logging
-- Rate limited to 500 messages per minute
-- Secure Netlify function to proxy requests with your API key
-<br>
-
-## Folder Structure
-
-```
-whatsapp-bulk-sender/
-├── public/
-│   └── index.html           # Main frontend UI
-├── functions/
-│   └── proxySend.js         # Netlify serverless function (CORS-safe)
-├── netlify.toml             # Netlify config
-├── package.json             # For node-fetch (if needed)
-└── README.md
-```
+Please keep in mind that while this tool does not track or collect message delivery statuses as-built, it can be modified to do so through use of our [non-ticket message status webhook event](https://docs.glassix.com/reference/events-overview#/non-ticket-message-status).
 <br>
 <br>
 
@@ -49,82 +49,54 @@ whatsapp-bulk-sender/
 git clone https://github.com/Glassix/js-examples.git
 cd whatsapp-bulk-sender
 ```
-You can also download the project folder directly. Once downloaded, open a terminal or command prompt in the directory.
+Or download the project folder directly.
 
 ### 2. Install Dependencies
 
-Required for Netlify CLI and Glassix NPM support:
+Required for Glassix NPM support - run in the project directory:
 
 ```bash
 npm install
 ```
+
+### 3. Modify and Deploy
+
+This is provided as an example only, and while it is fully functional, it should be modified before deployment.
+
+To preview the tool as-is, a Netlify configuration file is included for quick deployment via the [Netlify CLI](https://docs.netlify.com/cli/get-started/#manual-deploys).
 <br>
 <br>
 
-## Install Netlify CLI
+## Usage Instructions for the Sample Tool
 
-This example is built for easily deploying to Netlify via the CLI. You can also deploy to Netlify via their UI or directly from GitHub, in which case the below is not necessary.
-
-```bash
-npm install -g netlify-cli
-netlify dev
-```
-
-### Deploy to Netlify
-
-```bash
-netlify deploy --prod
-```
-
-Make sure your `netlify.toml` is set to:
-
-```toml
-[build]
-functions = "functions"
-publish = "public"
-```
-<br>
-<br>
-
-## Usage Instructions
-
-1. Go to your deployed app
-2. Fill in the following fields:
+1. Deploy the sample project and navigate to it in the browser
+3. Fill in the following fields:
    - **API Access Token** - See [here](https://docs.glassix.com/reference/access-token#/) for instructions on generating an access token
    - **Glassix Subdomain** - e.g. `yourteam` from `https://yourteam.glassix.com`
    - **Sender Number** - WhatsApp number connected to Glassix
    - **WhatsApp Template Text** - Approved WhatsApp template text
    - **File URLs** - Comma separated URLs where your header media is hosted
-3. Download the provided template or create a CSV file with a `to` column and recipient numbers in the following format: 12065551234
-4. Upload your CSV containing recipient phone numbers
-5. Click **Send Messages**
+4. Download the provided template or create a CSV file with a `to` column and recipient numbers in the following format: 12065551234
+5. Upload your CSV containing recipient phone numbers
+6. Click **Send Messages**
 <br>
 
-## Technologies Used
+## Dependencies in this Example
 
-- HTML + JavaScript
+- [Glassix NPM](https://github.com/Glassix/glassix-js)
 - [PapaParse](https://www.papaparse.com/) for CSV parsing
 - [Material Components Web](https://github.com/material-components/material-components-web)
-- Netlify Functions (`proxySend.js`)
+- [Netlify Functions](https://www.netlify.com/platform/core/functions/)
 <br>
 
 ## Security & Privacy
 
-Keep this project private or secure your deployment if used in production.
+This is provided as an example only. Keep this project private and never share your Glassix API credentials with anyone.
 
-Included safeguards:
-- API tokens are never sent directly from the frontend
-- All Glassix API calls go through a Netlify proxy function
-
-**Always** get consent from recipients before sending them marketing material.
+> [!CAUTION]
+> Never send API tokens directly from the frontend and use the [Glassix NPM](https://github.com/Glassix/glassix-js) package when possible.
+> **Always** get consent from recipients before sending them marketing material.
 <br>
-<br>
-
-## Coming Improvements
-
-- WebSocket or polling to reflect message delivery statuses
-- Retry mechanism for failed sends
-- CSV import with custom fields for message templating
 <br>
 
 ## License
