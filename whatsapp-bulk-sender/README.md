@@ -47,7 +47,7 @@ Please keep in mind that while this tool does not track or collect message deliv
 
 ```bash
 git clone https://github.com/Glassix/js-examples.git
-cd whatsapp-bulk-sender
+cd js-examples/whatsapp-bulk-sender
 ```
 Or download the project folder directly.
 
