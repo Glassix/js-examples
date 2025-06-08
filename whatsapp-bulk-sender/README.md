@@ -1,8 +1,8 @@
 # WhatsApp Bulk Sender
 
-This tool provides a user-friendly, browser-based interface for sending WhatsApp messages in bulk using the Protocol Send method of the [Glassix NPM](https://github.com/Glassix/glassix-js) package. Because the tool sends non-ticket WhatsApp messages, you should familiarize yourself with [non-ticket message sending](https://docs.glassix.com/docs/send-a-non-ticket-message#/) before continuing, if you haven't already.
+This tool provides a user-friendly, browser-based interface for sending WhatsApp messages in bulk using the Protocol Send method of the [Glassix JS SDK](https://github.com/Glassix/glassix-js). Because the tool sends non-ticket WhatsApp messages, you should familiarize yourself with [non-ticket message sending](https://docs.glassix.com/docs/send-a-non-ticket-message#/) before continuing, if you haven't already.
 
-As this is a simply a browser-based interface for non-ticket message sending, the same [requirements](https://docs.glassix.com/docs/send-a-non-ticket-message#prerequisites) apply as when sending with the Glassix NPM package or directly through the API.
+As this is a simply a browser-based interface for non-ticket message sending, the same [requirements](https://docs.glassix.com/docs/send-a-non-ticket-message#prerequisites) apply as when sending with the Glassix JS SDK or directly through the API.
 
 > [!IMPORTANT]
 > While the provided sample tool is completely functional, please keep in mind that it is intended as an example only, and should be considered a kicking-off point or template for your own project, rather than as a complete solution. This sample does not, for example, collect or track message delivery statuses, something we would recommend be added into any production solution.
@@ -34,8 +34,8 @@ The sample tool in this example includes the following functionality:
 - Configure and apply a rate limit (default: 500 messages per minute)
 
 Before deploying this tool for any type of regular use, we would recommend adding in at least the following:
-- WebSockets or polling to collect, display and log [message delivery statuses](https://docs.glassix.com/docs/send-a-non-ticket-message#getting-message-status-responses)
-- A retry mechanism for failed sends, based on message delivery statuses
+- Display and log [message delivery statuses](https://docs.glassix.com/docs/send-a-non-ticket-message#getting-message-status-responses)
+- Log failed requests
 
 Please keep in mind that while this tool does not track or collect message delivery statuses as-built, it can be modified to do so through use of our [non-ticket message status webhook event](https://docs.glassix.com/reference/events-overview#/non-ticket-message-status).
 <br>
@@ -53,7 +53,7 @@ Or download the project folder directly.
 
 ### 2. Install Dependencies
 
-Required for Glassix NPM support - run in the project directory:
+Required for Glassix JS SDK support - run in the project directory:
 
 ```bash
 npm install
@@ -75,7 +75,7 @@ To preview the tool as-is, a Netlify configuration file is included for quick de
    - **Glassix Subdomain** - e.g. `yourteam` from `https://yourteam.glassix.com`
    - **Sender Number** - WhatsApp number connected to Glassix
    - **WhatsApp Template Text** - Approved WhatsApp template text
-   - **File URLs** - Comma separated URLs where your header media is hosted
+   - **(Optional) File URLs** - Comma separated URLs where your header media is hosted, if your template contains header media
 4. Download the provided template or create a CSV file with a `to` column and recipient numbers in the following format: 12065551234
 5. Upload your CSV containing recipient phone numbers
 6. Click **Send Messages**
@@ -83,7 +83,7 @@ To preview the tool as-is, a Netlify configuration file is included for quick de
 
 ## Dependencies in this Example
 
-- [Glassix NPM](https://github.com/Glassix/glassix-js)
+- [Glassix JS SDK](https://github.com/Glassix/glassix-js)
 - [PapaParse](https://www.papaparse.com/) for CSV parsing
 - [Material Components Web](https://github.com/material-components/material-components-web)
 - [Netlify Functions](https://www.netlify.com/platform/core/functions/)
@@ -94,7 +94,7 @@ To preview the tool as-is, a Netlify configuration file is included for quick de
 This is provided as an example only. Keep this project private and never share your Glassix API credentials with anyone.
 
 > [!CAUTION]
-> Never send API tokens directly from the frontend and use the [Glassix NPM](https://github.com/Glassix/glassix-js) package when possible.
+> Never send API tokens directly from the frontend and use the [Glassix JS SDK](https://github.com/Glassix/glassix-js) when possible.
 > **Always** get consent from recipients before sending them marketing material.
 <br>
 <br>
